@@ -127,6 +127,8 @@ void NeuralNetwork::Train(const std::string &trainfile, int epoch) {
       ForwardFeed();
       BackPropagation();
     }
+    learning_rate *= 0.65;
+    std::cout << j << std::endl;
   }
   auto ff_e = std::chrono::steady_clock::now();
   auto res_ff = std::chrono::duration_cast<std::chrono::seconds>(ff_e - ff_b);
@@ -182,7 +184,7 @@ void NeuralNetwork::BackPropagation() noexcept {
   }
   for (int i = 0; i < amount_hide_layers_ - 1; ++i) {
     for (int j = 0; j < amount_neurons_[i + 1]; ++j) {
-      err = error[i + 1](j, 0) * 0.4f;
+      err = error[i + 1](j, 0) * learning_rate;
       bias[i](j, 0) += err;
       for (int k = 0; k < amount_neurons_[i]; ++k) {
         weights[i](j, k) += neurons[i](k, 0) * err;

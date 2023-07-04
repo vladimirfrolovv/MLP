@@ -3,16 +3,16 @@
 int main() {
   auto *nn = new s21::NeuralNetwork;
   std::vector<s21::Matrix> s;
-  std::vector<int> size = {784, 64, 64, 26};
-  nn->InitLayers(4, size);
+  std::vector<int> size = {784, 64, 64,64,64, 26};
+  nn->InitLayers(6, size);
 
   //      /Users/ikudr/S21/C++projects/MLP_new_ui/emnist-letters
   /// Users/fixierad/Projects/CPP7_MLP-2/srcData/
   nn->Train(
-      "/Users/fixierad/Projects/CPP7_MLP-2/src/Data/emnist-letters-train.csv",
-      1);
+      "/home/fixierad/project/tmp_mlp/Data/emnist-letters-train.csv",
+      10);
   nn->Test(
-      "/Users/fixierad/Projects/CPP7_MLP-2/src/Data/"
+      "/home/fixierad/project/tmp_mlp/Data/"
       "emnist-letters-test.csv");
   return 0;
 }

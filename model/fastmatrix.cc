@@ -62,16 +62,18 @@ Matrix::~Matrix() { this->Remove_matrix(); }
 
 void Matrix::Allocate_matrix() {
 //    matrix_ = new float[rows_ * cols_]();
-  matrix_ = new float *[rows_]();
-  matrix_[0] = new float[rows_ * cols_]();
-  for (auto i = 1; i < rows_; ++i) {
+  matrix_ = new float *[rows_]{};
+  matrix_[0] = new float[rows_ * cols_]{};
+  for (std::size_t i = 1; i < rows_; ++i) {
     matrix_[i] = matrix_[i - 1] + cols_;
   }
 }
 
 void Matrix::Remove_matrix() {
   if (matrix_ != nullptr) {
+      delete[] matrix_[0];
     delete[] matrix_;
+
     matrix_ = nullptr;
     rows_ = 0;
     cols_ = 0;

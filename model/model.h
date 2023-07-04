@@ -45,6 +45,7 @@ class NeuralNetwork {
   std::vector<Matrix> neurons;
   size_t answer = 0;
   std::vector<Matrix> error;
+  float learning_rate = 0.5;
   int parse_counter = 0;
   double err = 0;
   Reader* parser = nullptr;

@@ -25,7 +25,7 @@ style:
 #tests/*.cc Controller/*.cc Controller/*.h View/*.cc View/*.h *.cc *.h
 
 check-time:
-	@g++ model/test_main.cc model/model.cc model/fastmatrix.cc model/parser.cc -Ofast -march=native
+	@g++ model/test_main.cc model/model.cc model/fastmatrix.cc model/parser.cc -Ofast -march=native -ffast-math
 	@time ./a.out
 	@rm a.out
 
