@@ -61,17 +61,17 @@ Matrix::Matrix(Matrix &&other)
 Matrix::~Matrix() { this->Remove_matrix(); }
 
 void Matrix::Allocate_matrix() {
-//    matrix_ = new float[rows_ * cols_]();
-  matrix_ = new float *[rows_]{};
-  matrix_[0] = new float[rows_ * cols_]{};
-  for (std::size_t i = 1; i < rows_; ++i) {
-    matrix_[i] = matrix_[i - 1] + cols_;
-  }
+    matrix_ = new float[rows_ * cols_]();
+//  matrix_ = new float *[rows_]{};
+//  matrix_[0] = new float[rows_ * cols_]{};
+//  for (std::size_t i = 1; i < rows_; ++i) {
+//    matrix_[i] = matrix_[i - 1] + cols_;
+//  }
 }
 
 void Matrix::Remove_matrix() {
   if (matrix_ != nullptr) {
-      delete[] matrix_[0];
+//      delete[] matrix_[0];
     delete[] matrix_;
 
     matrix_ = nullptr;
@@ -100,7 +100,7 @@ void Matrix::SetCols(int cols) {
   }
 }
 
-float **Matrix::GetMatrix() const { return matrix_; }
+float *Matrix::GetMatrix() const { return matrix_; }
 
 Matrix &Matrix::operator=(const Matrix &other) {
   if (this != &other) {
@@ -193,16 +193,16 @@ float &Matrix::operator()(int rows, int cols) {
   if (rows > rows_ || rows < 0 || cols > cols_ || cols < 0) {
     throw std::out_of_range("Invalid size of matrix");
   }
-  return matrix_[rows][cols];
-//    return matrix_[rows * cols_ + cols];
+//  return matrix_[rows][cols];
+    return matrix_[rows * cols_ + cols];
 }
 
 float &Matrix::operator()(int rows, int cols) const {
   if (rows > rows_ || rows < 0 || cols > cols_ || cols < 0) {
     throw std::out_of_range("Invalid size of matrix");
   }
-  return matrix_[rows][cols];
-//    return matrix_[rows * cols_ + cols];
+//  return matrix_[rows][cols];
+    return matrix_[rows * cols_ + cols];
 }
 
 void Matrix::SumMatrix(const Matrix &other) {
@@ -257,80 +257,80 @@ void Matrix::MulMatrix(const Matrix &other) {
   //      }
   //    }
   //  }
-//     const std::size_t d = GetCols() / 2;
-//         std::vector<float> rowFactor(res.GetRows());
-//         std::vector<float> colsFactor(other.GetCols());
-//         for (std::size_t i = 0; i < rowFactor.size(); ++i) {
-//             rowFactor[i] = matrix_[i * GetCols()] * matrix_[i * GetCols()
-//             +1]; for (std::size_t j = 1; j < d; ++j) {
-//                 rowFactor[i] += matrix_[i * GetCols() + (2 * j)] * matrix_[i
-//                 * GetCols() + (2 * j + 1)];
-//             }
-//         }
-//         for (std::size_t i = 0; i < colsFactor.size(); ++i) {
-//             colsFactor[i] = other.matrix_[ i] * other.matrix_[other.GetCols()
-//             * 1 + i]; for (std::size_t j = 1; j < d; ++j) {
-//                 colsFactor[i] += other.matrix_[other.GetCols() * (2 * j) + i]
-//                 * other.matrix_[other.GetCols() * (2 * j + 1) + i];
-//             }
-//         }
-//
-//
-//         for (std::size_t i = 0; i < res.GetRows(); ++i) {
-//             for (std::size_t j = 0; j < res.GetCols(); ++j) {
-//                 res(i, j) = -rowFactor[i] - colsFactor[j];
-//                 for (std::size_t k = 0; k < d; ++k) {
-//                     res(i, j) += (matrix_[i * GetCols() + (2 * k)] +
-//                     other.matrix_[other.GetCols() * (2 * k + 1 )+ j]) *
-//                                     (matrix_[i * GetCols() + (2 * k + 1)] +
-//                                     other(2 * k, j));
-//                 }
-//             }
-//         }
-//
-//         if (res.GetCols() % 2 == 1) {
-//             for (std::size_t i = 0; i < res.GetRows(); ++i) {
-//                 for (std::size_t j = 0; j < res.GetCols(); ++j) {
-//                     res(i, j) += matrix_[i * GetCols() + (res.GetCols() - 1)]
-//                     * other.matrix_[other.GetCols() * (res.GetCols() - 1) +
-//                     j];
-//                 }
-//             }
-//         }
-  const std::size_t d = GetCols() / 2;
-  std::vector<float> rowFactor(res.GetRows());
-  std::vector<float> colsFactor(other.GetCols());
-  for (std::size_t i = 0; i < rowFactor.size(); ++i) {
-    rowFactor[i] = matrix_[i][0] * matrix_[i][1];
-    for (std::size_t j = 1; j < d; ++j) {
-      rowFactor[i] += matrix_[i][2 * j] * matrix_[i][2 * j + 1];
-    }
-  }
-  for (std::size_t i = 0; i < colsFactor.size(); ++i) {
-    colsFactor[i] = other(0, i) * other(1, i);
-    for (std::size_t j = 1; j < d; ++j) {
-      colsFactor[i] += other(2 * j, i) * other(2 * j + 1, i);
-    }
-  }
+     const std::size_t d = GetCols() / 2;
+         std::vector<float> rowFactor(res.GetRows());
+         std::vector<float> colsFactor(other.GetCols());
+         for (std::size_t i = 0; i < rowFactor.size(); ++i) {
+             rowFactor[i] = matrix_[i * GetCols()] * matrix_[i * GetCols()
+             +1]; for (std::size_t j = 1; j < d; ++j) {
+                 rowFactor[i] += matrix_[i * GetCols() + (2 * j)] * matrix_[i
+                 * GetCols() + (2 * j + 1)];
+             }
+         }
+         for (std::size_t i = 0; i < colsFactor.size(); ++i) {
+             colsFactor[i] = other.matrix_[ i] * other.matrix_[other.GetCols()
+             * 1 + i]; for (std::size_t j = 1; j < d; ++j) {
+                 colsFactor[i] += other.matrix_[other.GetCols() * (2 * j) + i]
+                 * other.matrix_[other.GetCols() * (2 * j + 1) + i];
+             }
+         }
 
-  for (std::size_t i = 0; i < res.GetRows(); ++i) {
-    for (std::size_t j = 0; j < res.GetCols(); ++j) {
-      res(i, j) = -rowFactor[i] - colsFactor[j];
-      for (std::size_t k = 0; k < d; ++k) {
-        res(i, j) += (matrix_[i][2 * k] + other(2 * k + 1, j)) *
-                     (matrix_[i][2 * k + 1] + other(2 * k, j));
-      }
-    }
-  }
 
-  if (res.GetCols() % 2 == 1) {
-    for (std::size_t i = 0; i < res.GetRows(); ++i) {
-      for (std::size_t j = 0; j < res.GetCols(); ++j) {
-        res(i, j) +=
-            matrix_[i][res.GetCols() - 1] * other(res.GetCols() - 1, j);
-      }
-    }
-  }
+         for (std::size_t i = 0; i < res.GetRows(); ++i) {
+             for (std::size_t j = 0; j < res.GetCols(); ++j) {
+                 res(i, j) = -rowFactor[i] - colsFactor[j];
+                 for (std::size_t k = 0; k < d; ++k) {
+                     res(i, j) += (matrix_[i * GetCols() + (2 * k)] +
+                     other.matrix_[other.GetCols() * (2 * k + 1 )+ j]) *
+                                     (matrix_[i * GetCols() + (2 * k + 1)] +
+                                     other(2 * k, j));
+                 }
+             }
+         }
+
+         if (res.GetCols() % 2 == 1) {
+             for (std::size_t i = 0; i < res.GetRows(); ++i) {
+                 for (std::size_t j = 0; j < res.GetCols(); ++j) {
+                     res(i, j) += matrix_[i * GetCols() + (res.GetCols() - 1)]
+                     * other.matrix_[other.GetCols() * (res.GetCols() - 1) +
+                     j];
+                 }
+             }
+         }
+//  const std::size_t d = GetCols() / 2;
+//  std::vector<float> rowFactor(res.GetRows());
+//  std::vector<float> colsFactor(other.GetCols());
+//  for (std::size_t i = 0; i < rowFactor.size(); ++i) {
+//    rowFactor[i] = matrix_[i][0] * matrix_[i][1];
+//    for (std::size_t j = 1; j < d; ++j) {
+//      rowFactor[i] += matrix_[i][2 * j] * matrix_[i][2 * j + 1];
+//    }
+//  }
+//  for (std::size_t i = 0; i < colsFactor.size(); ++i) {
+//    colsFactor[i] = other(0, i) * other(1, i);
+//    for (std::size_t j = 1; j < d; ++j) {
+//      colsFactor[i] += other(2 * j, i) * other(2 * j + 1, i);
+//    }
+//  }
+//
+//  for (std::size_t i = 0; i < res.GetRows(); ++i) {
+//    for (std::size_t j = 0; j < res.GetCols(); ++j) {
+//      res(i, j) = -rowFactor[i] - colsFactor[j];
+//      for (std::size_t k = 0; k < d; ++k) {
+//        res(i, j) += (matrix_[i][2 * k] + other(2 * k + 1, j)) *
+//                     (matrix_[i][2 * k + 1] + other(2 * k, j));
+//      }
+//    }
+//  }
+//
+//  if (res.GetCols() % 2 == 1) {
+//    for (std::size_t i = 0; i < res.GetRows(); ++i) {
+//      for (std::size_t j = 0; j < res.GetCols(); ++j) {
+//        res(i, j) +=
+//            matrix_[i][res.GetCols() - 1] * other(res.GetCols() - 1, j);
+//      }
+//    }
+//  }
 
   *this = std::move(res);
 }

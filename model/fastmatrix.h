@@ -49,7 +49,7 @@ class Matrix {
 
   void SetCols(int cols);
 
-  float **GetMatrix() const;
+  float *GetMatrix() const;
 
   void SumMatrix(const Matrix &other);
 
@@ -63,7 +63,7 @@ class Matrix {
  private:
   int rows_, cols_;
 
-  float **matrix_{};
+  float *matrix_{};
 
   void Allocate_matrix();
 
