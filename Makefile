@@ -1,7 +1,10 @@
 CC = g++ -std=c++17 -g
 CFLAGS = -Wall -Werror -Wextra
 TESTSFLAGS_MAC = -lgtest -lgtest_main
-
+SOURCE = Model/*.cc View/*.cc Controller/*.cc View/Form/*.cc View/MSEgraph/*.cc View/Statuswindow/*.cc View/Worker/*.cc
+SOURCE_H = Model/*.h View/*.h Controller/*.h View/Form/*.h View/MSEgraph/*.h View/Statuswindow/*.h View/Worker/*.h
+SOURCE_UI = View/*.ui View/Statuswindow/*.ui View/MSEgraph/*.ui
+DOCUMENTATION = ../documentation
 UNAME = $(shell uname)
 
 OPEN :=
@@ -17,53 +20,51 @@ endif
 all: install
 
 clang-format:
-	clang-format -style=google -i  Model/*.cc Model/*.h
-#tests/*.cc Controller/*.cc Controller/*.h View/*.cc View/*.h *.cc *.h
+	@clang-format -style=google -i $(SOURCE) $(SOURCE_H)
 
 style:
-	clang-format -style=google -n  Model/*.cc Model/*.h
-#tests/*.cc Controller/*.cc Controller/*.h View/*.cc View/*.h *.cc *.h
+	@clang-format -style=google -n $(SOURCE) $(SOURCE_H)
 
 check-time:
-	@g++ model/test_main.cc model/model.cc model/fastmatrix.cc model/parser.cc -Ofast -march=native -ffast-math
-	@time ./a.out
-	@rm a.out
-
-test-v1:
-	@g++ ModelV1.0/test_main.cc ModelV1.0/model.cc ModelV1.0/fastmatrix.cc ModelV1.0/parser.cc ModelV1.0/neuron.cc -Ofast -march=native
+	@g++ Model/test_main.cc Model/model.cc Model/fastmatrix.cc Model/reader.cc Model/matrixnetwork.cc Model/graphnetwork.cc Model/neuralnetwork.cc   -Ofast -march=native -flto
 	@time ./a.out
 	@rm a.out
 
 dvi:
-	doxygen
-	@$(OPEN) html/index.html
+	@doxygen Doxyfile
+	@$(OPEN) $(DOCUMENTATION)/html/index.html
+
 
 install:
-	@mkdir Qmake
-	@cd Qmake/ && qmake ../Viewer.pro && make
+	@cmake -S . -B build && cd build/ && make -j3
 
 open:
-	@$(OPEN) Qmake/Viewer.app/Contents/MacOS/./Viewer
+	@cd build/ && ./CPP7_MLP-2
 
 uninstall:
-	@rm -rf Viewer.app
-	@rm -rf Qmake
+	@rm -rf build/
 
 dist:
-	mkdir Viewer
-	@cp -r Model/*.cc Model/*.h Controller/*.cc Controller/*.h View/*.cc View/*.h *.cc *.h View/*.ui *.pro Makefile tests/ Doxyfile Viewer
-	tar -cvzf dist.tar.gz Viewer
-	@-rm -rf Viewer
+	mkdir MLP
+	@cp -r $(SOURCE) $(SOURCE_H) $(SOURCE_UI) Makefile Tests/ Doxyfile MLP
+	tar -cvzf dist.tar.gz MLP
+	@-rm -rf MLP
 
-SOURCE = ./Model/*.cc ./Controller/*.cc
+
 
 tests:
-	$(CC) $(CFLAGS) tests/tests_model.cc $(SOURCE) $(TESTSFLAGS_MAC) -o test
+	@g++ Tests/test.cc Controller/*.cc Model/*.cc $(TESTSFLAGS_MAC)  -Ofast -flto  -o test
 	@./test
+	@rm test
+
+main:
+	@$(CC) Controller/*.cc Model/*.cc Model/*.h -Ofast -flto -o test
+	@lea ./test
+	@rm test
 
 clean:
-	@rm -rf *.o test *.a *.gcno *.gcda *.gcov *.html *.css *.out *.info report Qmake html dist.tar.gz Viewer test.dSYM
+	@rm -rf *.o test *.a *.gcno *.gcda *.gcov *.html *.css *.out *.info report build html dist.tar.gz test.dSYM MLP
 
 rebuild: clean all
 
-.PHONY: tests clang-format
+.PHONY: tests clang-format install

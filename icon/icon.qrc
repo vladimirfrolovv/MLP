@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>MLP.icns</file>
+        <file>MLP.svg</file>
+    </qresource>
+</RCC>
